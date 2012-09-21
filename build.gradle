@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'jetty'
+
+
+repositories {
+    mavenCentral()
+    maven { url 'http://repo.springsource.org/libs-milestone' }
+}
+
+sourceCompatibility=1.6
+targetCompatibility=1.6
+
+eclipse {
+    project {
+        natures += 'org.springframework.ide.eclipse.core.springnature'
+    }
+}
+
+mainClassName = "com.lv.tica.Main"
+
+run{
+    
+    standardInput = System.in
+}
+
+dependencies {
+	compile "org.springframework:spring-core:$springVersion"
+	compile "org.springframework:spring-context:$springVersion"
+	compile "org.springframework:spring-web:$springVersion"
+	compile "org.springframework:spring-webmvc:$springVersion"
+	compile "org.springframework:spring-context-support:$springVersion"
+	// compile "org.springframework:spring-jmx:$springVersion"
+    compile "org.springframework.integration:spring-integration-core:$springIntegrationVersion"
+    compile "org.springframework.integration:spring-integration-jmx:$springIntegrationVersion"
+    compile "org.springframework.integration:spring-integration-http:$springIntegrationVersion"
+
+    compile "ch.qos.logback:logback-classic:1.0.0"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
+    compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+
+    testCompile "junit:junit-dep:$junitVersion"
+}
