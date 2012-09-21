@@ -1,8 +1,8 @@
 *.class
 .gradle
 .settings
-bin
+bin/**/*
 .classpath
 .project
 .springbeans
-build
+build/**/*
