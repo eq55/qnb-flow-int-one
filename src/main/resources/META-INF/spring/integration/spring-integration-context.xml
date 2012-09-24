@@ -31,5 +31,7 @@
                            expression="payload.toUpperCase()"/>
 
     <int:channel id="requestChannel"/>-->
+    
+    <!-- I like comments too! -->
 
 </beans>
