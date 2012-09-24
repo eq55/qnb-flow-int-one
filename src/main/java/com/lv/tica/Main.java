@@ -47,7 +47,7 @@ public final class Main {
 
         LOGGER.info("\n========================================================="
                   + "\n                                                         "
-                  + "\n          Welcome to Spring Integration!                 "
+                  + "\n          Welcome to Spring Integration!!!               "
                   + "\n                                                         "
                   + "\n    For more information please visit:                   "
                   + "\n    http://www.springsource.org/spring-integration       "
