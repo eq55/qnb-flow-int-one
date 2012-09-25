@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.springframework.org/schema/webflow 
+							http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+		start-state="getSearchCriteria">
+
+	<on-start>
+		<evaluate expression="vehicleSearchCriteriaPrototype" result="flowScope.vehicleSearchCriteria" />
+	</on-start>
+	 
+	<view-state id="getSearchCriteria" model="vehicleSearchCriteria" view="vrn-search">
+		<transition on="search" to="searchForVehicle"/>
+	</view-state>
+	
+	<action-state id="searchForVehicle">
+		<evaluate expression="vehicleSearchActions.search(vehicleSearchCriteria)"/>
+		<transition on="restart" to="getSearchCriteria"/>
+	</action-state>
+	
+	
+</flow>

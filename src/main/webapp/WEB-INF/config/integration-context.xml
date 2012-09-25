@@ -12,25 +12,18 @@
 
     <!-- See also:
         http://static.springsource.org/spring-integration/reference/htmlsingle/#gateway-proxy
-        http://www.eaipatterns.com/MessagingGateway.html 
-    <int:gateway id="gateway"
-                 default-request-timeout="5000"
-                 default-reply-timeout="5000"
-                 default-request-channel="requestChannel"
-                 default-reply-channel="replyChannel"
-                 service-interface="com.lv.tica.service.StringConversionService">
-        <int:method name="convertToUpperCase"/>
-    </int:gateway>
-    -->
+        http://www.eaipatterns.com/MessagingGateway.html--> 
+    <int:gateway id="gateway"  service-interface="com.lv.tica.service.RandomService"/>
+    
 
     <!-- See also:
         http://static.springsource.org/spring-integration/reference/htmlsingle/#service-activator
-        http://www.eaipatterns.com/MessagingAdapter.html 
+        http://www.eaipatterns.com/MessagingAdapter.html -->
     <int:service-activator id="serviceActivator"
                            input-channel="requestChannel"
-                           expression="payload.toUpperCase()"/>
+                           expression="payload[T(java.lang.Math).random() * payload.length]"/>
 
-    <int:channel id="requestChannel"/>-->
+    <int:channel id="requestChannel"/>
     
     <!-- I like comments too! -->
 

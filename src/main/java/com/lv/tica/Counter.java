@@ -5,8 +5,6 @@ import org.springframework.jmx.export.annotation.ManagedMetric;
 
 public interface Counter {
 
-	@ManagedAttribute
-	@ManagedMetric
 	public abstract int getCounter();
 
 }

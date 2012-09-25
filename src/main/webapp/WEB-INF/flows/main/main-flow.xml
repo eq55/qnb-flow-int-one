@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.springframework.org/schema/webflow 
+							http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+		start-state="startUp">
+
+	 
+	<!-- action to initialize the session and decide which sub flow to start -->
+	<action-state id="startUp">
+		<evaluate expression="gateway.getRandomMember(listFactory)" />
+		<transition on="randomPath1" to="path1"/>
+		<transition on="randomPath2" to="path2"/>
+	</action-state>
+	
+	<view-state id="path1"/>
+	<view-state id="path2"/>
+	
+	
+	
+</flow>

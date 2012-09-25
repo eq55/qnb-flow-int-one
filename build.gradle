@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
 apply plugin: 'jetty'
 apply plugin: 'maven'
@@ -43,6 +44,8 @@ dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "org.slf4j:log4j-over-slf4j:$slf4jVersion"
     compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+	compile "org.springframework.webflow:spring-webflow:2.3.1.RELEASE"
+	compile "javax.servlet:jstl:$jstlVersion"
 
     testCompile "junit:junit-dep:$junitVersion"
 }
