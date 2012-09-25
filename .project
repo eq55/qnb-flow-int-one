@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>spring-integration-spike</name>
+	<name>qnb-flow-int-one</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -14,6 +14,7 @@
 	<natures>
 		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.jdt.groovy.core.groovyNature</nature>
 		<nature>org.springframework.ide.eclipse.core.springnature</nature>
 	</natures>
 </projectDescription>

@@ -5,12 +5,14 @@
 	xmlns:int-http="http://www.springframework.org/schema/integration/http"
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:int-jmx="http://www.springframework.org/schema/integration/jmx"
+	xmlns:webflow="http://www.springframework.org/schema/webflow-config"
 	xsi:schemaLocation="http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 		http://www.springframework.org/schema/integration/jmx http://www.springframework.org/schema/integration/jmx/spring-integration-jmx-2.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
 
 	<!-- Scans within the base package of the application for @Components to 
 		configure as beans -->
@@ -24,28 +26,36 @@
 	
 	<mvc:annotation-driven />
 	
-	<!-- <mvc:default-servlet-handler /> -->
+	<mvc:default-servlet-handler />
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing 
 		infrastructure -->
 
-	<bean id="handlerMapping"
-		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-	</bean>
+<!-- 	<bean id="handlerMapping" -->
+<!-- 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"> -->
+<!-- 	</bean> -->
 
-	<bean
-		class="org.springframework.integration.http.inbound.UriPathHandlerMapping" />
+<!-- 	<bean class="org.springframework.integration.http.inbound.UriPathHandlerMapping" /> -->
 
 	<bean class="com.lv.tica.BeanCounting" />
 
-	<int-http:inbound-gateway id="inboundGateway"
-		path="/lowercase/{lowercase}" request-channel="requestChannel"
-		payload-expression="#pathVariables.lowercase" />
+<!-- 	<int-http:inbound-gateway id="inboundGateway" -->
+<!-- 		path="/lowercase/{lowercase}" request-channel="requestChannel" -->
+<!-- 		payload-expression="#pathVariables.lowercase" /> -->
 
 	<int:service-activator id="serviceActivator"
-		input-channel="requestChannel" expression="payload.toUpperCase()" />
+		input-channel="vrnInput"
+		output-channel="vrnLookupEventChannel"
+		ref="vrnProvider"
+		method="getDescription"
+	/>
+	
+	<bean id="vrnProvider" class="com.lv.tica.VrnProvider" />
 
-	<int:channel id="requestChannel" />
+	<int:channel id="vrnInput" />
+	<int:channel id="vrnLookupEventChannel">
+		<int:queue />
+	</int:channel>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/css directory -->
@@ -54,9 +64,40 @@
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->
-	<bean
+	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</bean>
+	
+	<!--  webflow magic starts here -->
+ 	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+ 		<property name="order" value="2"/>
+		<property name="mappings">
+			<value>/vrn=flowController</value>
+		</property>
+	</bean>
+
+<!-- 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/> -->
+
+	<bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
+		<property name="flowExecutor" ref="flowExecutor"/>
+	</bean>
+
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry" />
+
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+		<webflow:flow-location id="vrn" path="classpath:META-INF/spring/flows/flow.xml" />
+	</webflow:flow-registry>
+	
+	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator"/>
+	
+	<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+		<property name="viewResolvers" ref="viewResolver"/>
+	</bean>
+
+	<bean id="vehicleBacking" class="com.lv.tica.Vehicle" scope="prototype" />
+	<bean id="vrnMessageSender" class="com.lv.tica.VRNMessageSender" />
+	
 </beans>
