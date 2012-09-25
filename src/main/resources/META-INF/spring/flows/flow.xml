@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.springframework.org/schema/webflow 
+							http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+		start-state="VRNcapture">
+	 
+	<on-start>
+		<evaluate expression="vehicleBacking" result="flowScope.vehicle" />
+	</on-start>
+	
+	<view-state id="VRNcapture" view="VRNcapture" model="vehicle" >
+		<transition on="Next" to="LookupVRN" />
+	</view-state>
+	
+	<action-state id="LookupVRN" >
+		<evaluate expression="vrnMessageSender.sendMessage(vehicle)"/>
+		<transition on="found" to="VRNfound" />
+		<transition on="missing" to="VRNmissing" />
+	</action-state>
+	
+	<view-state id="VRNfound" view="VRNfound" model="vehicle"/>
+
+	<view-state id="VRNmissing" view="VRNmissing" model="vehicle"/>
+	
+</flow>
